@@ -12,7 +12,7 @@ const app = express();
 // without CORS headers if we don't handle it explicitly.
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (origin === "http://localhost:5174") {
+  if (origin === "http://localhost:5173") {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Vary", "Origin");
     res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
 app.use(
   cors({
-    origin: "http://localhost:5174",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
