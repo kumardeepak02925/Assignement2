@@ -5,6 +5,9 @@ import Navbar from "../componets/Navbar";
 
 const Dashboard = () => {
   const [students, setStudents] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [form, setForm] = useState({ name: "", age: "", course: "" });
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
 
@@ -19,10 +22,17 @@ const Dashboard = () => {
     setStudents(res.data);
   };
 
-  const updateStudent = async (id) => {
-    await API.put(`/student/${id}`, { course: "MCA" }, {
+  const openEditModal = (student) => {
+    setSelectedStudent(student);
+    setForm({ name: student.name, age: student.age, course: student.course });
+    setShowModal(true);
+  };
+
+  const handleUpdate = async () => {
+    await API.put(`/student/${selectedStudent._id}`, form, {
       headers: { Authorization: `Bearer ${token}` }
     });
+    setShowModal(false);
     fetchStudents();
   };
 
@@ -54,10 +64,10 @@ const Dashboard = () => {
                 {role === "admin" && (
                   <td>
                     <button
-                      onClick={() => updateStudent(s._id)}
-                      className="bg-blue-500 text-white px-3 py-1 rounded"
+                      onClick={() => openEditModal(s)}
+                      className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                     >
-                      Update
+                      Edit
                     </button>
                   </td>
                 )}
@@ -66,6 +76,53 @@ const Dashboard = () => {
           </tbody>
         </table>
 
+        {/* Edit Modal */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h3 className="text-xl font-bold mb-4">Edit Student</h3>
+
+              <input
+                type="text"
+                placeholder="Name"
+                className="w-full p-2 border rounded mb-3"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+
+              <input
+                type="number"
+                placeholder="Age"
+                className="w-full p-2 border rounded mb-3"
+                value={form.age}
+                onChange={(e) => setForm({ ...form, age: e.target.value })}
+              />
+
+              <input
+                type="text"
+                placeholder="Course"
+                className="w-full p-2 border rounded mb-4"
+                value={form.course}
+                onChange={(e) => setForm({ ...form, course: e.target.value })}
+              />
+
+              <div className="flex justify-end space-x-2">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdate}
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                >
+                  Update
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
