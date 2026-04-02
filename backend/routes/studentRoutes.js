@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { verifyToken } = require("../middleware/authMiddleware");
 const { isAdmin } = require("../middleware/roleMiddleware");
-const { getStudents, updateStudent } = require("../controllers/studentController");
+const { getStudents, updateStudent } = require("../controllers/studentcontroller");
 
 // 🔓 Protected Route (User + Admin)
 router.get("/", verifyToken, getStudents);

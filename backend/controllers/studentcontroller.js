@@ -1,4 +1,4 @@
-const Student = require("../models/Student");
+const Student = require("../models/student");
 
 // VIEW STUDENTS (User + Admin)
 exports.getStudents = async (req, res) => {
