@@ -1,5 +1,6 @@
-{
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
-}
+404: NOT_FOUND
+Code: NOT_FOUND
+ID: bom1:bom1::kcws5-1775046840222-b17f34b27356
+
+Read our documentation to learn more about this error.
+
