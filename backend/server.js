@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const Student = require("./models/student");
 
 dotenv.config();
 
@@ -27,10 +28,22 @@ app.use((req, _res, next) => {
   next();
 });
 
-// ✅ MongoDB connection
+// ✅ MongoDB connection & seeding
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
+  .then(async () => {
+    console.log("MongoDB Connected");
+
+    // Seed initial students if none exist
+    const count = await Student.countDocuments();
+    if (count === 0) {
+      await Student.insertMany([
+        { name: "John Doe", age: 20, course: "BCA" },
+        { name: "Jane Smith", age: 22, course: "MCA" }
+      ]);
+      console.log("Initial students seeded");
+    }
+  })
   .catch((err) => console.log(err));
 
 // ✅ Routes
