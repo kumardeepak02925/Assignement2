@@ -8,6 +8,8 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [form, setForm] = useState({ name: "", age: "", course: "" });
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addForm, setAddForm] = useState({ name: "", age: "", course: "" });
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
 
@@ -36,6 +38,15 @@ const Dashboard = () => {
     fetchStudents();
   };
 
+  const handleAdd = async () => {
+    await API.post("/student", addForm, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setShowAddModal(false);
+    setAddForm({ name: "", age: "", course: "" });
+    fetchStudents();
+  };
+
   return (
     <div>
       <Sidebar />
@@ -43,6 +54,15 @@ const Dashboard = () => {
 
       <div className="ml-60 p-6 bg-gray-100 min-h-screen">
         <h2 className="text-2xl font-bold mb-4">Students</h2>
+
+        {role === "admin" && (
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-green-600"
+          >
+            Add Student
+          </button>
+        )}
 
         <table className="w-full bg-white rounded shadow">
           <thead className="bg-gray-200">
@@ -118,6 +138,54 @@ const Dashboard = () => {
                   className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                 >
                   Update
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Add Modal */}
+        {showAddModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h3 className="text-xl font-bold mb-4">Add Student</h3>
+
+              <input
+                type="text"
+                placeholder="Name"
+                className="w-full p-2 border rounded mb-3"
+                value={addForm.name}
+                onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
+              />
+
+              <input
+                type="number"
+                placeholder="Age"
+                className="w-full p-2 border rounded mb-3"
+                value={addForm.age}
+                onChange={(e) => setAddForm({ ...addForm, age: e.target.value })}
+              />
+
+              <input
+                type="text"
+                placeholder="Course"
+                className="w-full p-2 border rounded mb-4"
+                value={addForm.course}
+                onChange={(e) => setAddForm({ ...addForm, course: e.target.value })}
+              />
+
+              <div className="flex justify-end space-x-2">
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAdd}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Add
                 </button>
               </div>
             </div>

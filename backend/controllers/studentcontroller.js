@@ -10,6 +10,18 @@ exports.getStudents = async (req, res) => {
     }
 };
 
+// CREATE STUDENT (Admin only)
+exports.createStudent = async (req, res) => {
+    try {
+        const { name, age, course } = req.body;
+        const newStudent = new Student({ name, age, course });
+        await newStudent.save();
+        res.status(201).json(newStudent);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 // UPDATE STUDENT (Admin only)
 exports.updateStudent = async (req, res) => {
     try {
